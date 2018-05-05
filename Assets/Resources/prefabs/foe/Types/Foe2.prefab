@@ -105,7 +105,7 @@ MonoBehaviour:
   MoveSpeed: 3
   isAttacking: 0
   isReceivingDamage: 0
-  speed: 2
+  speed: 3
   groundIndex: 0
   enemyType: 0
   verticalUpdateDistance: 0.5

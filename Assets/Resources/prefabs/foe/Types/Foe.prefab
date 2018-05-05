@@ -102,10 +102,10 @@ MonoBehaviour:
   playerStatus: {fileID: 0}
   maxLife: 2
   life: 2
-  MoveSpeed: 3
+  MoveSpeed: 4
   isAttacking: 0
   isReceivingDamage: 0
-  speed: 2
+  speed: 4
   groundIndex: 0
   enemyType: 0
   verticalUpdateDistance: 0.5

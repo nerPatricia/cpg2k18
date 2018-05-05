@@ -153,6 +153,11 @@ public class Character : MonoBehaviour {
     private void RestartTimerToExplode() {
         StopCoroutine("TimerToExplode");
         StartCoroutine("TimerToExplode");
+		Rigidbody2D projectile = bombPrefab.GetComponent<Rigidbody2D> ();
+        Rigidbody2D clone;
+        clone = Instantiate (projectile, this.transform.position, Quaternion.identity) as Rigidbody2D;
+        clone.GetComponent<BombBehavior> ().minY = this.transform.position.y - 1;
+        clone.velocity = transform.TransformDirection ((Vector2.right + (2 * Vector2.up)) * attackDistance * 5);
     }
 
     private void Damage(int damage) {

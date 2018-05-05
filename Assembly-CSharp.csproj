@@ -61,9 +61,10 @@
   <ItemGroup>
     <Compile Include="Assets\Characters\Player\Scripts\Character.cs" />
     <Compile Include="Assets\Characters\Player\Scripts\InputHandler.cs" />
-    <Compile Include="Assets\prefabs\bomb\Script\BombBehavior.cs" />
-    <Compile Include="Assets\prefabs\foe\Script\Foe.cs" />
+    <Compile Include="Assets\Resources\prefabs\bomb\Script\BombBehavior.cs" />
+    <Compile Include="Assets\Resources\prefabs\foe\Script\Foe.cs" />
     <Compile Include="Assets\Scripts\CameraBehavior.cs" />
+    <Compile Include="Assets\Scripts\EnemySpawn.cs" />
     <Compile Include="Assets\Scripts\GameLoop.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>D:/Documents/Game Development/CPG2k18/CPG2k18/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>

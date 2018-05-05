@@ -62,6 +62,7 @@
     <Compile Include="Assets\Characters\Player\Scripts\Character.cs" />
     <Compile Include="Assets\Characters\Player\Scripts\InputHandler.cs" />
     <Compile Include="Assets\prefabs\bomb\Script\BombBehavior.cs" />
+    <Compile Include="Assets\prefabs\foe\Script\Foe.cs" />
     <Compile Include="Assets\Scripts\CameraBehavior.cs" />
     <Compile Include="Assets\Scripts\GameLoop.cs" />
     <Reference Include="UnityEditor.StandardEvents">

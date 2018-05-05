@@ -19,18 +19,29 @@ public class GameLoop : MonoBehaviour {
 
     void Update() {
         InputHandler.HandleInput(player);
-
+        UpdateLifeHUD();
     }
 
 
     private void UpdateLifeHUD() {
         if (this.hudLife  > player.life) {
             this.hudLife--;
-            Transform lifeIcons = this.lifePanel.GetComponentInChildren<Transform>();
+            Transform[] lifeIcons = this.lifePanel.GetComponentsInChildren<Transform>();
+            Debug.Log(lifeIcons[1].name);
+            Destroy(lifeIcons[1].gameObject);
         }
-        else {
+        else if (this.hudLife < player.life) {
             this.hudLife++;
             Instantiate(lifeIcon,lifePanel.transform);
         }
+    }
+
+
+    private void GameOver() {
+
+    }
+
+    private void Menu() {
+
     }
 }

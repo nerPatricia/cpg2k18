@@ -42,20 +42,15 @@ public class Character : MonoBehaviour {
         this.transform.position = new Vector2(this.transform.position.x, gameLoop.groundLayers[this.groundIndex].position.y);
 
         this.life = maxLife;
-		this.bombsLeft = maxBombs;
-        StartCoroutine("TimerToExplode");
     }
 
     // Update is called once per frame
     void Update() {
-        this.timer.transform.position = new Vector2(this.transform.position.x, (this.transform.position.y+1.7f));
-
     }
 
     void FixedUpdate() {
 
     }
-
 
 
     public void Mirror(int dir) {
@@ -138,33 +133,13 @@ public class Character : MonoBehaviour {
 			clone.GetComponent<BombBehavior> ().minY = this.transform.position.y - 1;
 			clone.GetComponent<BombBehavior> ().playerStatus = this;
 			clone.velocity = transform.TransformDirection ((Vector2.right + (2 * Vector2.up)) * attackDistance);
-			RestartTimerToExplode();	
 		}
     }
 
     public void Super() {
         this.animator.SetTrigger("super");
-        RestartTimerToExplode();
     }
 
-    IEnumerator TimerToExplode() {
-        float leftTime = timeToBombExplode;
-        while (leftTime > 0) {
-            leftTime--;
-            this.timer.text = leftTime+"/" + timeToBombExplode;
-            yield return new WaitForSeconds(1f);
-        }
-        Debug.Log("Explodiu");
-        this.animator.SetTrigger("bombTimeOut");
-        Damage(1);
-
-        RestartTimerToExplode();
-    }
-
-    private void RestartTimerToExplode() {
-        StopCoroutine("TimerToExplode");
-        StartCoroutine("TimerToExplode");
-    }
 
     private void Damage(int damage) {
         this.life -= damage;

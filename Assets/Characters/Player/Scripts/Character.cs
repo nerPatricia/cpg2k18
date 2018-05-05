@@ -42,6 +42,7 @@ public class Character : MonoBehaviour {
         this.transform.position = new Vector2(this.transform.position.x, gameLoop.groundLayers[this.groundIndex].position.y);
 
         this.life = maxLife;
+		this.bombsLeft = 5;
     }
 
     // Update is called once per frame

@@ -12,12 +12,14 @@ public class Foe : MonoBehaviour {
 	public int MoveSpeed;
 
 	public bool isAttacking;
+	public bool isReceivingDamage;
 
 	public int speed;
 	public int groundIndex = 0;
 
 	private Rigidbody2D RB2d;
 	private BoxCollider2D BC2d;
+	private SpriteRenderer ownRenderer;
 	public float verticalUpdateDistance = 0.5f;
 
 	private float attackDistance = 1.5f;
@@ -28,13 +30,18 @@ public class Foe : MonoBehaviour {
 	void Start() {
 		this.RB2d = this.GetComponent<Rigidbody2D>();
 		this.BC2d = this.GetComponent<BoxCollider2D>();
+		this.ownRenderer = this.GetComponent<SpriteRenderer>();
 		// this.transform.position = new Vector2(this.transform.position.x, gameLoop.groundLayers[this.groundIndex].position.y);
 		this.life = maxLife;
 	}
 
 	// Update is called once per frame
 	void Update() {
-		ChasePlayer ();
+		if (this.life > 0) {
+			ChasePlayer ();
+		} else {
+			this.Die ();
+		}
 	}
 
 	IEnumerator Delay ()
@@ -148,8 +155,35 @@ public class Foe : MonoBehaviour {
 		Debug.Log ("kapow!");
 	}
 
-	private void Damage(int damage) {
-		this.life -= damage;
+	public void Damage(int damage) {
+		Debug.Log ("Argh!");
+		if (!isReceivingDamage) {
+			this.life -= damage;
+			isReceivingDamage = true;
+			StartCoroutine("Flash");
+		}
+	}
+
+	private void Die () {
+
+	}
+
+	IEnumerator Flash ()
+	{
+		bool toggle = true;
+		this.BC2d.enabled = false;
+		for (int i = 0; i < 10; ++i) {
+			yield return new WaitForSeconds(.1f);
+			if (toggle) {
+				this.ownRenderer.enabled = false;
+				toggle = false;
+			} else {
+				this.ownRenderer.enabled = true;
+				toggle = true;
+			}
+		}
+		this.BC2d.enabled = true;
+		isReceivingDamage = false;
 	}
 }
 

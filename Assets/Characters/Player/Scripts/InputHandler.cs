@@ -12,12 +12,14 @@ public class InputHandler {
         else if (Input.GetButtonDown("Down") ) {
             player.MoveDown();
         }
-
-        if (Input.GetAxis("Horizontal") > 0.1) {
+        else if (Input.GetAxis("Horizontal") > 0.1) {
             player.MoveRight();
         }
         else if (Input.GetAxis("Horizontal") < -0.1) {
             player.MoveLeft();
+        }
+        else if (!player.verticalMoving) {
+            player.StopWalking();
         }
 
         if (Input.GetButtonDown("Fire1")) {

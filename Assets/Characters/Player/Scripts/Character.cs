@@ -18,7 +18,8 @@ public class Character : MonoBehaviour {
 
     public float verticalUpdateDistance = 0.5f;
 
-
+    public float minAttackDistance;
+    public float attackIncrement;
     public float attackDistance;
     public float maxAttackDistance;
 
@@ -29,9 +30,7 @@ public class Character : MonoBehaviour {
 	public int maxBombs = 5;
 	public int bombsLeft;
 
-
-    public Text timer;
-
+    public bool verticalMoving;
     // Use this for initialization
     void Start() {
 
@@ -42,6 +41,7 @@ public class Character : MonoBehaviour {
         this.transform.position = new Vector2(this.transform.position.x, gameLoop.groundLayers[this.groundIndex].position.y);
 
         this.life = maxLife;
+        this.bombsLeft = this.maxBombs;
     }
 
     // Update is called once per frame
@@ -85,6 +85,7 @@ public class Character : MonoBehaviour {
     }
 
     IEnumerator VerticalMove(int dir) {
+        verticalMoving = true;
         this.animator.SetBool("walking", true);
 
         float distance = Mathf.Abs(this.transform.position.y - gameLoop.groundLayers[this.groundIndex].position.y);
@@ -94,6 +95,7 @@ public class Character : MonoBehaviour {
             if (dir == 8) this.transform.Translate(new Vector2(0, verticalUpdateDistance));
             yield return new WaitForSeconds(.001f);
         }
+        verticalMoving = false;
     }
 
     public void Move() {
@@ -105,18 +107,19 @@ public class Character : MonoBehaviour {
         this.animator.SetBool("walking", false);
     }
 
+
     public void BeginChargeAttack() {
         StartCoroutine("ChargingAttack");
     }
 
     IEnumerator ChargingAttack() {
-        attackDistance = 0;
+        attackDistance = minAttackDistance;
         while (true) {
             if (attackDistance > maxAttackDistance) {
-                attackDistance = 0;
+                attackDistance = minAttackDistance;
             }
             else {
-                attackDistance += 1;
+                attackDistance += attackIncrement;
             }
             yield return new WaitForSeconds(.1f);
         }

@@ -22,6 +22,8 @@ public class GameLoop : MonoBehaviour {
     public RectTransform powerThrowRender;
 
     void Start() {
+		player = GameObject.FindWithTag ("Player").GetComponent<Character>();
+		lifePanel = GameObject.FindWithTag ("HUD");
         hudLife = player.maxLife;
         for (int i = 0; i< hudLife; i++) {
             Instantiate(lifeIcon, lifePanel.transform);

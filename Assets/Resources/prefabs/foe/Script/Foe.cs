@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class Foe : MonoBehaviour {
 	public Character playerStatus;
-	public GameLoop gameLoop;
 
 	public int maxLife;
 	public int life;
@@ -16,6 +15,7 @@ public class Foe : MonoBehaviour {
 
 	public int speed;
 	public int groundIndex = 0;
+	public int enemyType;
 
 	private Rigidbody2D RB2d;
 	private BoxCollider2D BC2d;
@@ -31,7 +31,7 @@ public class Foe : MonoBehaviour {
 		this.RB2d = this.GetComponent<Rigidbody2D>();
 		this.BC2d = this.GetComponent<BoxCollider2D>();
 		this.ownRenderer = this.GetComponent<SpriteRenderer>();
-		// this.transform.position = new Vector2(this.transform.position.x, gameLoop.groundLayers[this.groundIndex].position.y);
+		this.playerStatus = GameObject.FindWithTag ("Player").GetComponent<Character>();
 		this.life = maxLife;
 	}
 
@@ -54,12 +54,13 @@ public class Foe : MonoBehaviour {
 	void ChasePlayer () {
 		double newDistance = Mathf.Abs (this.transform.position.x - playerStatus.transform.position.x);
 		double verticalDist = Mathf.Abs (this.transform.position.y - playerStatus.transform.position.y);
+
 		if (!isAttacking) {
 			// Check if it's in distance to the player
-			if (newDistance <= attackDistance && verticalDist <= 0.8) {
+			if (newDistance <= attackDistance && verticalDist <= 0.2) {
 				Attack ();
 				StartCoroutine ("Delay");
-			} else if (newDistance <= attackDistance && verticalDist >= 0.8) {
+			} else if (newDistance <= attackDistance && verticalDist >= 0.2) {
 				if (verticalDist >= 0.8) {
 					if (this.transform.position.y > playerStatus.transform.position.y) {
 						this.MoveDown();
@@ -72,7 +73,7 @@ public class Foe : MonoBehaviour {
 				int op = (int) Random.Range (0, 100);
 				op %= 2;
 				if (op == 0) {
-					if (verticalDist >= 0.8) {
+					if (verticalDist >= 0.2) {
 						if (this.transform.position.y > playerStatus.transform.position.y) {
 							this.MoveDown();
 						} else {
@@ -93,12 +94,6 @@ public class Foe : MonoBehaviour {
 
 	}
 
-	void FixedUpdate() {
-
-	}
-
-
-
 	public void Mirror(int dir) {
 		if (dir == 6) this.transform.rotation = new Quaternion(0, 0, 0, 0);
 		if (dir == 4) this.transform.rotation = new Quaternion(0, 180, 0, 0);
@@ -115,32 +110,13 @@ public class Foe : MonoBehaviour {
 	}
 
 	public void MoveDown() {
-		if (groundIndex > 0) {
-			groundIndex--;
-			StopCoroutine("VerticalMove");
-			StartCoroutine("VerticalMove",2);
-		} 
+		this.transform.Translate (new Vector2 (0, -0.6f) * Time.deltaTime * this.speed);
 	}
 
 	public void MoveUp() {
-		if (groundIndex < (gameLoop.groundLayers.Length - 1)) {
-			groundIndex++;
-			StopCoroutine("VerticalMove");
-			StartCoroutine("VerticalMove",8);
-		}
+		this.transform.Translate (new Vector2 (0, 0.6f) * Time.deltaTime * this.speed);
 	}
-
-	IEnumerator VerticalMove(int dir) {
-		// this.animator.SetBool("walking", true);
-
-		float distance = Mathf.Abs(this.transform.position.y - gameLoop.groundLayers[this.groundIndex].position.y);
-
-		for(float i = 0; i < distance; i+= verticalUpdateDistance) {
-			if (dir == 2) this.transform.Translate(new Vector2(0, -verticalUpdateDistance)); 
-			if (dir == 8) this.transform.Translate(new Vector2(0, verticalUpdateDistance));
-			yield return new WaitForSeconds(.001f);
-		}
-	}
+		
 
 	public void Move() {
 		// this.animator.SetBool("walking", true);
@@ -153,15 +129,18 @@ public class Foe : MonoBehaviour {
 		
 	public void Attack() {
 		Debug.Log ("kapow!");
+		playerStatus.takeDamage (1);
 	}
 
 	public void Damage(int damage) {
 		Debug.Log ("Argh!");
-		if (!isReceivingDamage) {
+		if (!isReceivingDamage && this.life > 0) {
 			this.life -= damage;
 			isReceivingDamage = true;
 			StartCoroutine("Flash");
 		}
+		if (this.life <= 0)
+			this.Die ();
 	}
 
 	private void Die () {

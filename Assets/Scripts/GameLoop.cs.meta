@@ -1,11 +1,14 @@
 fileFormatVersion: 2
 guid: 76ed1cd478900e54ba074a2d7aff7242
-timeCreated: 1525495077
-licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - player: {instanceID: 0}
+  - lifeIcon: {fileID: 1600602429536456, guid: df1b3bdb95206ce47828b0a919f4981d, type: 2}
+  - lifePanel: {instanceID: 0}
+  - bombIcon: {fileID: 21300000, guid: 649b042e95e229a419d14e3dfda8c98b, type: 3}
+  - usedBombIcon: {fileID: 21300000, guid: 421e257805a123d47ba32364071ef604, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

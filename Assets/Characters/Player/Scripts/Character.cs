@@ -1,14 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Character : MonoBehaviour {
+    public int maxLife;
+    public int life;
+
     public int speed;
     public GameLoop gameLoop;
     public int groundIndex = 0;
 
     private Rigidbody2D RB2d;
-    private Transform characterTransform;
     private BoxCollider2D BC2d;
     private Animator animator;
 
@@ -19,9 +22,13 @@ public class Character : MonoBehaviour {
     public float attackDistance;
     public float maxAttackDistance;
 
+    public float timeToBombExplode;
 
     public GameObject bombPrefab;
     public GameObject superBombPrefab;
+
+
+    public Text timer;
 
     // Use this for initialization
     void Start() {
@@ -32,10 +39,14 @@ public class Character : MonoBehaviour {
 
         this.transform.position = new Vector2(this.transform.position.x, gameLoop.groundLayers[this.groundIndex].position.y);
 
+        this.life = maxLife;
+
+        StartCoroutine("TimerToExplode");
     }
 
     // Update is called once per frame
     void Update() {
+        this.timer.transform.position = new Vector2(this.transform.position.x, (this.transform.position.y+1.7f));
 
     }
 
@@ -117,10 +128,35 @@ public class Character : MonoBehaviour {
         StopCoroutine("ChargingAttack");
         this.animator.SetTrigger("attack");
         Instantiate(bombPrefab, this.transform.position, Quaternion.identity);
+        RestartTimerToExplode();
     }
 
     public void Super() {
         this.animator.SetTrigger("super");
+        RestartTimerToExplode();
+    }
+
+    IEnumerator TimerToExplode() {
+        float leftTime = timeToBombExplode;
+        while (leftTime > 0) {
+            leftTime--;
+            this.timer.text = leftTime+"/" + timeToBombExplode;
+            yield return new WaitForSeconds(1f);
+        }
+        Debug.Log("Explodiu");
+        this.animator.SetTrigger("bombTimeOut");
+        Damage(1);
+
+        RestartTimerToExplode();
+    }
+
+    private void RestartTimerToExplode() {
+        StopCoroutine("TimerToExplode");
+        StartCoroutine("TimerToExplode");
+    }
+
+    private void Damage(int damage) {
+        this.life -= damage;
     }
 }
 

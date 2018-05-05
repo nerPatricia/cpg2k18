@@ -14,7 +14,6 @@ public class BombBehavior : MonoBehaviour {
     IEnumerator Timer() {
         for (float i = 0; i < timeToExplode; i+=.1f) {
             yield return new WaitForSeconds(.1f);
-            Debug.Log("olá");
         }
     }
 

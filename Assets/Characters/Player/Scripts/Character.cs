@@ -26,6 +26,8 @@ public class Character : MonoBehaviour {
 
     public GameObject bombPrefab;
     public GameObject superBombPrefab;
+	public int maxBombs = 5;
+	public int bombsLeft;
 
 
     public Text timer;
@@ -40,7 +42,7 @@ public class Character : MonoBehaviour {
         this.transform.position = new Vector2(this.transform.position.x, gameLoop.groundLayers[this.groundIndex].position.y);
 
         this.life = maxLife;
-
+		this.bombsLeft = maxBombs;
         StartCoroutine("TimerToExplode");
     }
 
@@ -124,11 +126,20 @@ public class Character : MonoBehaviour {
             yield return new WaitForSeconds(.1f);
         }
     }
+
     public void Attack() {
         StopCoroutine("ChargingAttack");
-        this.animator.SetTrigger("attack");
-        Instantiate(bombPrefab, this.transform.position, Quaternion.identity);
-        RestartTimerToExplode();
+		if (bombsLeft > 0) {
+			this.animator.SetTrigger("attack");
+			Rigidbody2D projectile = bombPrefab.GetComponent<Rigidbody2D> ();
+			Rigidbody2D clone;
+			bombsLeft--;
+			clone = Instantiate (projectile, this.transform.position, Quaternion.identity) as Rigidbody2D;
+			clone.GetComponent<BombBehavior> ().minY = this.transform.position.y - 1;
+			clone.GetComponent<BombBehavior> ().playerStatus = this;
+			clone.velocity = transform.TransformDirection ((Vector2.right + (2 * Vector2.up)) * attackDistance);
+			RestartTimerToExplode();	
+		}
     }
 
     public void Super() {
@@ -153,11 +164,6 @@ public class Character : MonoBehaviour {
     private void RestartTimerToExplode() {
         StopCoroutine("TimerToExplode");
         StartCoroutine("TimerToExplode");
-		Rigidbody2D projectile = bombPrefab.GetComponent<Rigidbody2D> ();
-        Rigidbody2D clone;
-        clone = Instantiate (projectile, this.transform.position, Quaternion.identity) as Rigidbody2D;
-        clone.GetComponent<BombBehavior> ().minY = this.transform.position.y - 1;
-        clone.velocity = transform.TransformDirection ((Vector2.right + (2 * Vector2.up)) * attackDistance * 5);
     }
 
     private void Damage(int damage) {

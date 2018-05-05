@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class BombBehavior : MonoBehaviour {
 
-    public float timeToExplode;
+	public float minY;
+	public float timeToExplode;
+	public Character playerStatus;
 
 	// Use this for initialization
 	void Start () {
         StartCoroutine("Timer");
 	}
-	
+
 	void Update () {
         bool stopped = false;
         if (!stopped && this.transform.position.y < this.minY)
@@ -25,6 +27,7 @@ public class BombBehavior : MonoBehaviour {
         for (float i = 0; i < timeToExplode; i+=.1f) {
             yield return new WaitForSeconds(.1f);
         }
+		Explode ();
     }
 
     private void Explode() {
@@ -32,5 +35,6 @@ public class BombBehavior : MonoBehaviour {
         //raycast nos inimigos ao redor que estão na mesma camada
         //chama a função de dano neles
         Destroy(this.gameObject);
+		playerStatus.bombsLeft++;
     }
 }

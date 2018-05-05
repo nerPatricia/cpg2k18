@@ -165,7 +165,7 @@ public class Foe : MonoBehaviour {
 	}
 
 	private void Die () {
-
+		Destroy(this.gameObject);
 	}
 
 	IEnumerator Flash ()

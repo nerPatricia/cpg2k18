@@ -14,7 +14,7 @@ public class Character : MonoBehaviour {
     private Rigidbody2D RB2d;
     private BoxCollider2D BC2d;
     private Animator animator;
-
+	private SpriteRenderer ownRenderer;
 
     public float verticalUpdateDistance = 0.5f;
 
@@ -31,17 +31,21 @@ public class Character : MonoBehaviour {
 	public int bombsLeft;
 
     public bool verticalMoving;
+	public bool isTakingDamage;
     // Use this for initialization
     void Start() {
 
         this.RB2d = this.GetComponent<Rigidbody2D>();
         this.animator = this.GetComponent<Animator>();
         this.BC2d = this.GetComponent<BoxCollider2D>();
+		this.ownRenderer = this.GetComponent<SpriteRenderer> ();
 
         this.transform.position = new Vector2(this.transform.position.x, gameLoop.groundLayers[this.groundIndex].position.y);
 
         this.life = maxLife;
         this.bombsLeft = this.maxBombs;
+
+		this.isTakingDamage = false;
     }
 
     // Update is called once per frame
@@ -143,9 +147,41 @@ public class Character : MonoBehaviour {
         this.animator.SetTrigger("super");
     }
 
+	public void takeDamage (int damage) {
+		this.Damage (damage);
+	}
+
 
     private void Damage(int damage) {
-        this.life -= damage;
+		if (isTakingDamage == false && this.life > 0) {
+			isTakingDamage = true;
+			this.life -= damage;
+			StartCoroutine("Flash");
+		} 
+		if (this.life <= 0)
+			this.Die ();
     }
+
+	private void Die () {
+		Destroy(this.gameObject);
+	}
+
+	IEnumerator Flash ()
+	{
+		bool toggle = true;
+		this.BC2d.enabled = false;
+		for (int i = 0; i < 10; ++i) {
+			yield return new WaitForSeconds(.1f);
+			if (toggle) {
+				this.ownRenderer.enabled = false;
+				toggle = false;
+			} else {
+				this.ownRenderer.enabled = true;
+				toggle = true;
+			}
+		}
+		this.BC2d.enabled = true;
+		isTakingDamage = false;
+	}
 }
 

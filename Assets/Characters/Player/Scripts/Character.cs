@@ -30,6 +30,9 @@ public class Character : MonoBehaviour {
 	public int maxBombs = 5;
 	public int bombsLeft;
 
+
+
+    public bool charging = false;
     public bool verticalMoving;
     // Use this for initialization
     void Start() {
@@ -109,6 +112,7 @@ public class Character : MonoBehaviour {
 
 
     public void BeginChargeAttack() {
+        this.charging = true;
         StartCoroutine("ChargingAttack");
     }
 
@@ -126,7 +130,10 @@ public class Character : MonoBehaviour {
     }
 
     public void Attack() {
+        this.charging = false;
+
         StopCoroutine("ChargingAttack");
+
 		if (bombsLeft > 0) {
 			this.animator.SetTrigger("attack");
 			Rigidbody2D projectile = bombPrefab.GetComponent<Rigidbody2D> ();

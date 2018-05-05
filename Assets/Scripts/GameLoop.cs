@@ -17,7 +17,10 @@ public class GameLoop : MonoBehaviour {
     public Sprite usedBombIcon;
 
     public int hudLife;
-    
+
+    public GameObject ThrowPowerHUD;
+    public RectTransform powerThrowRender;
+
     void Start() {
         hudLife = player.maxLife;
         for (int i = 0; i< hudLife; i++) {
@@ -29,6 +32,7 @@ public class GameLoop : MonoBehaviour {
         InputHandler.HandleInput(player);
         UpdateLifeHUD();
         UpdateBombHUD();
+        UpdateThrowBombHUD();
     }
 
 
@@ -53,8 +57,20 @@ public class GameLoop : MonoBehaviour {
             else {
                 bombicons[i].sprite = usedBombIcon;
             }
-            
         }
+    }
+
+    private void UpdateThrowBombHUD() {
+        if (player.charging) {
+            ThrowPowerHUD.SetActive(true);
+            ThrowPowerHUD.transform.position = new Vector2(player.transform.position.x, player.transform.position.y + 2);
+            float x = player.attackDistance / player.maxAttackDistance;
+            powerThrowRender.localScale = new Vector3(x, powerThrowRender.transform.localScale.y, powerThrowRender.transform.localScale.z);
+        }
+        else {
+            ThrowPowerHUD.SetActive(false);
+        }
+        
     }
 
 
